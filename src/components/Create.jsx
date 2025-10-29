@@ -35,10 +35,21 @@ const Create = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // ensure numeric values are numbers
+    const payload = {
+      ...form,
+      reqExperience: Number(form.reqExperience),
+      postId: form.postId === "" ? undefined : Number(form.postId),
+    };
+
     axios
-      .post("http://localhost:8080/jobPost",form)
+      .post("http://localhost:8000/posts", payload)
       .then((resp) => {
         console.log(resp.data);
+        // navigate only after successful save
+        navigate("/");
+        // optional: reset form
+        setForm(initial);
       })
       .catch((error) => {
         console.log(error);
@@ -48,7 +59,15 @@ const Create = () => {
   const { postId, postProfile, reqExperience, postDesc } = form;
 
   const handleChange = (e) => {
-    setForm({...form , postTechStack : [...form.postTechStack, e.target.value]});
+    const value = e.target.value;
+    const checked = e.target.checked;
+    setForm(prev => {
+      const current = prev.postTechStack || [];
+      const updated = checked
+        ? Array.from(new Set([...current, value]))
+        : current.filter(s => s !== value);
+      return { ...prev, postTechStack: updated };
+    });
   }
 
   
@@ -120,6 +139,7 @@ const Create = () => {
                     name={name}
                     value={name}
                     onChange={handleChange}  
+                    checked={form.postTechStack.includes(name)}
                   />
                   <label htmlFor={`custom-checkbox-${index}`}>{name}</label>
                 </div>
@@ -134,7 +154,6 @@ const Create = () => {
             sx={{ width: "50%", margin: "2% auto" }}
             variant="contained"
             type="submit"
-            onClick={()=>navigate("/")}
           >
             Submit
           </Button>
