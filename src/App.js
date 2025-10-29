@@ -8,16 +8,14 @@ import Edit from './components/Edit';
 
 function App() {
   return (
-  <>
-   <Navbar/>
-   <BrowserRouter>
-   <Routes>
-   <Route path='/' element={<AllPosts/>}/>
-   <Route path="/create" element={<Create />} />
-   <Route path="/edit" element={<Edit />} />
-   </Routes>
-   </BrowserRouter> 
-  </>
+    <BrowserRouter>
+      <Navbar />  {/* ✅ Move inside BrowserRouter */}
+      <Routes>
+        <Route path="/" element={<AllPosts />} />
+        <Route path="/create" element={<Create />} />
+        <Route path="/edit" element={<Edit />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
